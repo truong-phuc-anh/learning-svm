@@ -1,4 +1,5 @@
 import numpy
+import matplotlib.pyplot as plt
 from svm.algorithms.perceptron_learning_algorithm import *
 from succinctly.datasets import get_dataset, linearly_separable
 
@@ -13,6 +14,15 @@ if __name__ == '__main__':
     w = pla(X_augmented, Y) # different w with different runing time (change random seed will see)
     print w
 
+    # evaluation
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 2, 1)
+    ax.scatter(X[:,0], X[:,1], c = Y)
+    ax.set_title('trainning set')
+    x = numpy.arange(0, 15, 0.01)
+    y = (-w[1]*x - w[0])/w[2];
+    ax.plot(x, y)
+
     print '------testing-------'
     X, Y = get_dataset(linearly_separable.get_test_examples)
     # add 1 to all x in X to get augmented vectors
@@ -26,3 +36,14 @@ if __name__ == '__main__':
     print 'number of mis_samples = {0}'.format(len(mis_samples))
     print 'mis_samples percent = {0} %'.format(len(mis_samples) * 100.0 / len(Y_predicted))
     
+    # evaluation
+    ax = fig.add_subplot(1, 2, 2)
+    ax.scatter(X[:,0], X[:,1], c = Y)
+    ax.set_title('testing set')
+    x = numpy.arange(0, 15, 0.01)
+    y = (-w[1]*x - w[0])/w[2];
+    ax.plot(x, y)
+
+    plt.show()
+
+
