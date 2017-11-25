@@ -43,8 +43,14 @@
     <Compile Include="svm\algorithms\perceptron_learning_algorithm.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="svm\algorithms\svm_hard_margin.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="svm\algorithms\__init__.py" />
     <Compile Include="svm\run\demo_pla.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="svm\run\demo_svm_binary_hard_margin.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="svm\run\demo_vector.py">
@@ -64,6 +70,12 @@
     </Compile>
     <Compile Include="svm\run\__init__.py" />
     <Compile Include="svm\test\pla\__init__.py" />
+    <Compile Include="svm\test\svm\binary-classify\__init__.py" />
+    <Compile Include="svm\test\svm\hard-margin\test_cvxopt_solver.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="svm\test\svm\binary-classify\hard-margin\__init__.py" />
+    <Compile Include="svm\test\svm\__init__.py" />
     <Compile Include="svm\test\__init__.py" />
     <Compile Include="svm\__init__.py" />
   </ItemGroup>
@@ -77,7 +89,10 @@
     <Folder Include="succinctly\run\" />
     <Folder Include="svm\test\" />
     <Folder Include="svm\run\" />
+    <Folder Include="svm\test\svm\" />
     <Folder Include="svm\test\pla\" />
+    <Folder Include="svm\test\svm\binary-classify\hard-margin\" />
+    <Folder Include="svm\test\svm\binary-classify\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>
