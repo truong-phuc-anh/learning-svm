@@ -1,26 +1,38 @@
 import numpy as np
 from random import randrange
+from svm.algorithms import kernels
 
+class SMO:
+    """SVM binary classification using SMO for optimization problem
 
-# Written from the pseudo-code in :
-# http://luthuli.cs.uiuc.edu/~daf/courses/optimization/Papers/smoTR.pdf
-class SmoAlgorithm:
-    def __init__(self, X, y, C, tol, kernel, use_linear_optim):
-        self.X = X
-        self.y = y
-        self.m, self.n = np.shape(self.X)
-        self.alphas = np.zeros(self.m)
+    Written from the pseudo-code in: 
+    http://luthuli.cs.uiuc.edu/~daf/courses/optimization/Papers/smoTR.pdf.
+    
+    This class support for binary classification only, 
+    use whichever one-vs-one or one-vs-the-rest scheme for multiclassify
 
+    Parameters
+    ----------
+    C : float, optional (default=1.0)
+        Parameter in QP constrant 0 <= alpha <= C
+
+    tol : float, optional (default=1e-4)
+          Tolerance for stopping citeria
+
+    kernel : function, optional (default=kernels.linear)
+             Specifies the kernels used in the algorithm
+             It must be one of kernel in kernels
+
+    use_linear_optim : bool, optional (default=True)
+                       Whether use linear optimization or not
+    """
+    def __init__(self, C=1.0, tol=1e-4, kernel=kernels.linear, use_linear_optim=True):
         self.kernel = kernel
         self.C = C
         self.tol = tol
-
-        self.errors = np.zeros(self.m)
         self.eps = 1e-3  # epsilon
-
+        self.w = np.zeros(1)
         self.b = 0
-
-        self.w = np.zeros(self.n)
         self.use_linear_optim = use_linear_optim
 
     # Compute the SVM output for example i
@@ -236,7 +248,25 @@ class SmoAlgorithm:
             num_changed += self.examine_example(i)
         return num_changed
 
-    def main_routine(self):
+    def fit(self, X, y):
+        """Fit the model according to the given training data.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape = [n_samples, n_features]
+            Training vector, where n_samples in the number of samples and
+            n_features is the number of features.
+
+        y : array-like, shape = [n_samples]
+            Target vector relative to X
+        """
+        self.X = X
+        self.y = y
+        self.m, self.n = np.shape(self.X)
+        self.alphas = np.zeros(self.m)
+        self.errors = np.zeros(self.m)
+        self.w = np.zeros(self.n)
+
         num_changed = 0
         examine_all = True
 
@@ -253,4 +283,44 @@ class SmoAlgorithm:
                 examine_all = False
             elif num_changed == 0:
                 examine_all = True
+
+    def predict(self, X):
+        """
+        Perform classification on samples in X
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            Samples need to predict.
+
+        Returns
+        -------
+        y_pred : array, shape (n_samples, 1)
+            Class labels for samples in X, 
+            labels is +1 or -1.
+        """
+
+        return np.sign(self.get_scores(X))
+
+    def get_scores(self, X):
+        """
+            Apply hyperplan formula for each samples x in X
+            return wx - b.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            Samples need to predict.
+
+        Returns
+        -------
+        scores : array of floats, shape (n_samples, 1)
+            score[i] = dot(w, X[i]) - b
+        """
+        n_samples = np.shape(X)[0]
+        scores = np.zeros(n_samples)
+        for i in range(n_samples):
+            scores[i] = np.dot(self.w, X[i]) - self.b
+        return scores
+
 
