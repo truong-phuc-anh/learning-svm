@@ -3,6 +3,7 @@ import cvxopt.solvers
 
 # using cvopt solvers to solve quadratics problem of SVMs (calculate alpha(1...m))
 # then using alpha(1..m) computer w and b
+# hard margin only can work on linear separable data
 def svm_hard_margin(X, y):
 
     # number of samples
@@ -74,3 +75,8 @@ def calculate_b(w, X, y):
     sum = np.sum(y[i] - np.dot(w, X[i])
                  for i in range(len(X)))
     return sum / len(X)
+
+# calculate margin:
+def calculate_margin(w):
+    norm_w = np.linalg.norm(w)
+    return 0.5 / norm_w
