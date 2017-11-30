@@ -1,6 +1,6 @@
 import numpy
 import matplotlib.pyplot as plt
-from svm.algorithms.perceptron_learning_algorithm import *
+from svm.algorithms.pla import *
 from succinctly.datasets import get_dataset, linearly_separable
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import numpy as np
 
-def perceptron_learning_algorithm(X, y):
+def pla(X, y):
     w = np.random.rand(3)   # can also be initialized at zero.
     misclassified_examples = predict(hypothesis, X, y, w)
 
