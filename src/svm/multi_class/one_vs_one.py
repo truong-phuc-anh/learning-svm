@@ -37,10 +37,10 @@ class OneVsOneClassifier:
         #print('predictions:\n {}'.format(predictions))
         for idx, clf in enumerate(self.classifiers):
             class_pair = self.class_pairs[idx]
-            #print('class_pair:\n {}'.format(class_pair))
+            print('class_pair:\n {}'.format(class_pair))
             prediction = clf.predict(X_unknown)
             predictions[:, idx] = np.where(prediction == 1, class_pair[0], class_pair[1])
-            #print('predictions:\n {}'.format(predictions))
+            print('predictions:\n {}'.format(predictions))
         # with each row in predictions, return common value
         # example [1, 2, 1 ,4, 3, 0] -> return 1
         return mode(predictions, axis=1)[0].ravel().astype(int)

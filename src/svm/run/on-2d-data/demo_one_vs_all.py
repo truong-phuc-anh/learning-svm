@@ -8,16 +8,13 @@ if __name__ == '__main__':
     y = load_y()
     print('X:\n {}'.format(X))
     print('y:\n {}'.format(y))
-    multi_classifier = OneVsAllClassifier()
-    multi_classifier.fit(X, y, kernel = kernels.linear, C = 1000)
     X_unknown = np.array([[5, 5], [2, 5], [-10, -100]])
-    predict_y = multi_classifier.predit(X_unknown)
-    print predict_y
-
     model = svm.LinearSVC()
     model.fit(X, y)
     predict_y = model.predict(X_unknown)
-    print predict_y
+    print('predict_y:\n {}'.format(predict_y))
 
-
-
+    multi_classifier = OneVsAllClassifier()
+    multi_classifier.fit(X, y, kernel = kernels.linear, C = 1000)
+    predict_y = multi_classifier.predit(X_unknown)
+    print('predict_y:\n {}'.format(predict_y))

@@ -9,24 +9,24 @@ class SMO:
     http://luthuli.cs.uiuc.edu/~daf/courses/optimization/Papers/smoTR.pdf.
     
     This class support for binary classification only, 
-    use whichever one-vs-one or one-vs-the-rest scheme for multiclassify
+    use whichever one-vs-one or one-vs-the-rest scheme for multiclassify.
 
-    The hyperplan formula used in this class is 'w.x - b = 0'
+    The hyperplan formula used in this class is 'w.x - b = 0'.
 
     Parameters
     ----------
     C : float, optional (default=1.0)
-        Parameter in QP constrant 0 <= alpha <= C
+        Parameter in QP constrant 0 <= alpha <= C.
 
     tol : float, optional (default=1e-4)
-          Tolerance for stopping citeria
+          Tolerance for stopping citeria.
 
     kernel : function, optional (default=kernels.linear)
-             Specifies the kernels used in the algorithm
-             It must be one of kernel in kernels
+        Specifies the kernels used in the algorithm.
+        It must be one of kernel in kernels.
 
     use_linear_optim : bool, optional (default=True)
-                       Whether use linear optimization or not
+        Whether use linear optimization or not.
     """
     def __init__(self, C=1.0, tol=1e-4, kernel=kernels.linear, use_linear_optim=True):
         self.kernel = kernel
