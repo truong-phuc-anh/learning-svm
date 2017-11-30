@@ -1,6 +1,6 @@
 from succinctly.multi_class import load_X, load_y
 import numpy as np
-from sklearn import svm
+from svm.algorithms import smo
 
 # n_classifiers = n_classes
 class OneVsAllClassifier:
@@ -17,7 +17,7 @@ class OneVsAllClassifier:
         # Train one binary classifier on each problem (each class vs the rest)
         self.classifiers = []
         for y_i in y_list:
-            clf = svm.SVC(kernel=kernel, C=C)
+            clf = smo.SMO(kernel=kernel, C=C)
             clf.fit(X, y_i)
             self.classifiers.append(clf)
 

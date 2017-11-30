@@ -13,10 +13,11 @@ if __name__ == '__main__':
     w = classifier.w
     print('w:\n {}'.format(w))
     print('b:\n {}'.format(b))
-    #visualizer.visualize_2d_data(X_train, y_train, X_test, y_test, w, b)
     y_pred = classifier.predict(X_test)
     scores = classifier.get_scores(X_test)
+    prob = classifier.get_probability_scores(X_test)
     print('scores:\n {}'.format(scores))
+    print('prob:\n {}'.format(prob))
     print('y_test:\n {}'.format(y_test))
     print('y_pred:\n {}'.format(y_pred))
     sci = svm.SVC(kernel='linear', C=10, tol=0.001)

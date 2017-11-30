@@ -11,6 +11,8 @@ class SMO:
     This class support for binary classification only, 
     use whichever one-vs-one or one-vs-the-rest scheme for multiclassify
 
+    The hyperplan formula used in this class is 'w.x - b = 0'
+
     Parameters
     ----------
     C : float, optional (default=1.0)
@@ -310,17 +312,35 @@ class SMO:
         Parameters
         ----------
         X : {array-like, sparse matrix}, shape (n_samples, n_features)
-            Samples need to predict.
+            Samples.
 
         Returns
         -------
         scores : array of floats, shape (n_samples, 1)
             score[i] = dot(w, X[i]) - b
+            scores of each sample x in X
         """
         n_samples = np.shape(X)[0]
         scores = np.zeros(n_samples)
         for i in range(n_samples):
             scores[i] = np.dot(self.w, X[i]) - self.b
         return scores
+
+    def get_probability_scores(self, X):
+        """
+            Calculate probability socre for each sample in X.
+
+            Using sigmod method: p(y=1|x) = 1 / (1 + exp(-score(x))).
+        Parameters
+        ----------
+        X : {array-like, sparse matrix}, shape (n_samples, n_features)
+            Samples.
+
+        Returns
+        -------
+        prob : array of floats, shape (n_samples, 1)
+            probability of each sample x in X.
+        """
+        return 1.0 / (1.0 + np.exp(-self.get_scores(X)))
 
 
