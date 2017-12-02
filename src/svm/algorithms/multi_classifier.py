@@ -1,15 +1,16 @@
 from scipy.stats import mode
 from itertools import combinations
 from svm.algorithms import smo
-from ulti import logger
-import logging
 import numpy as np
+import timeit
 
 # n_classifiers = n_classes * (n_classes - 1) / 2
 class OneVsOneClassifier:
     def __init__(self):
         self.classifiers = []
         self.class_pairs = []
+        self.time_fit = 0
+
     def create_trainning_data(self, X, y):
         training_data = []
         self.class_pairs = list(combinations(set(y), 2))
@@ -24,9 +25,7 @@ class OneVsOneClassifier:
         return training_data
 
     def fit(self, X, y, kernel, C):
-        lg = logger.get_logger(logging.DEBUG, logging.DEBUG)
-        lg.info('kernel: {}'.format(kernel.func_name))
-        lg.info('C: {}'.format(C))
+        start_time = timeit.default_timer()
         training_data = self.create_trainning_data(X, y)
         # Train one classifier per pair
         self.classifiers = []
@@ -34,6 +33,7 @@ class OneVsOneClassifier:
             clf = smo.SMO(kernel = kernel, C = C)
             clf.fit(data[0], data[1])
             self.classifiers.append(clf)
+        self.time_fit = timeit.default_timer() - start_time
 
     def predit(self, X_unknown):
         # each row is prediction of a sample in X_unknown
@@ -41,10 +41,40 @@ class OneVsOneClassifier:
         #print('predictions:\n {}'.format(predictions))
         for idx, clf in enumerate(self.classifiers):
             class_pair = self.class_pairs[idx]
-            print('class_pair:\n {}'.format(class_pair))
+            # print('class_pair:\n {}'.format(class_pair))
             prediction = clf.predict(X_unknown)
             predictions[:, idx] = np.where(prediction == 1, class_pair[0], class_pair[1])
-            print('predictions:\n {}'.format(predictions))
+            # print('predictions:\n {}'.format(predictions))
         # with each row in predictions, return common value
         # example [1, 2, 1 ,4, 3, 0] -> return 1
-        return mode(predictions, axis=1)[0].ravel().astype(int)
+        return np.asarray(mode(predictions, axis=1)[0].ravel().astype(int))
+
+# n_classifiers = n_classes
+class OneVsRestClassifier:
+    def __init__(self):
+        self.classifiers = []
+        self.classes = []
+        self.time_fit = 0
+
+    def fit(self, X, y, kernel, C):
+        start_time = timeit.default_timer()
+        self.classes = np.unique(y)
+        y_list = []
+        for c in self.classes:
+            y_c = np.where(y == c, 1, -1)
+            y_list.append(y_c); 
+        # Train one binary classifier on each problem (each class vs the rest)
+        self.classifiers = []
+        for y_i in y_list:
+            clf = smo.SMO(kernel=kernel, C=C)
+            clf.fit(X, y_i)
+            self.classifiers.append(clf)
+        self.time_fit = timeit.default_timer() - start_time
+
+    def predit(self, X):
+        probs = np.zeros((X.shape[0], len(self.classifiers)))
+        for idx, clf in enumerate(self.classifiers):
+            probs[:, idx] = clf.get_probability_scores(X)
+        # print('probabilities:\n {}'.format(probs))
+        max_indices = np.argmax(probs, axis = 1)
+        return np.asarray([self.classes[idx] for idx in max_indices])

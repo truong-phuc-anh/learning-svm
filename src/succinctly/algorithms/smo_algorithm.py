@@ -5,9 +5,7 @@ from random import randrange
 # Written from the pseudo-code in :
 # http://luthuli.cs.uiuc.edu/~daf/courses/optimization/Papers/smoTR.pdf
 class SmoAlgorithm:
-    def __init__(self, X, y, C, tol, kernel, use_linear_optim):
-        self.X = X
-        self.y = y
+    def __init__(self, C, tol, kernel, use_linear_optim):
         self.m, self.n = np.shape(self.X)
         self.alphas = np.zeros(self.m)
 
@@ -18,6 +16,7 @@ class SmoAlgorithm:
         self.errors = np.zeros(self.m)
         self.eps = 1e-3  # epsilon
 
+        self.w = []
         self.b = 0
 
         self.w = np.zeros(self.n)

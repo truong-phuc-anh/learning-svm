@@ -2,6 +2,7 @@ from svm.multi_class.one_vs_all import *
 from succinctly.multi_class import load_X, load_y
 from sklearn import svm
 from svm.algorithms import kernels
+import logging
 
 if __name__ == '__main__':
     X = load_X()

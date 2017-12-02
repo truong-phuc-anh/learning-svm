@@ -28,7 +28,3 @@ class OneVsAllClassifier:
         print('probabilities:\n {}'.format(probs))
         max_indices = np.argmax(probs, axis = 1)
         return [self.classes[idx] for idx in max_indices]
-
-
-
-
